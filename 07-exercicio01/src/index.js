@@ -1,0 +1,103 @@
+var spaceships = [];
+function addSpaceship(name, pilot, crewLimit) {
+    var spaceship = {
+        name: name,
+        pilot: pilot,
+        crewLimit: crewLimit,
+        crew: [],
+        inMission: false
+    };
+    spaceships.push(spaceship);
+    alert("A nave ".concat(spaceship.name, " foi registrada"));
+}
+function findSpaceship(name) {
+    var spaceship;
+    spaceship = spaceships.find(function (ship) { return ship.name === name; });
+    return spaceship;
+}
+function addCrewMember(member, spaceship) {
+    if (spaceship.crew.length >= spaceship.crewLimit) {
+        alert("".concat(member, " n\u00E3o pode ser adicionado. Limite atingido"));
+    }
+    else {
+        spaceship.crew.push(member);
+        alert("".concat(member, " foi adicionado \u00E0 tripula\u00E7\u00E3o da ").concat(spaceship.name));
+    }
+}
+function sendInMission(spaceship) {
+    if (spaceship.inMission) {
+        alert("".concat(spaceship.name, " n\u00E3o pode ser enviada. Nave j\u00E1 em miss\u00E3o."));
+    }
+    else if (spaceship.crew.length < Math.floor(spaceship.crewLimit / 3)) {
+        alert("".concat(spaceship.name, " n\u00E3o pode ser enviada. Tripula\u00E7\u00E3o insuficiente."));
+    }
+    else {
+        spaceship.inMission = true;
+        alert("".concat(spaceship.name, " enviada para a miss\u00E3o."));
+    }
+}
+function firstMenuOption() {
+    var name = prompt('Qual o nome da nave a ser registrada?');
+    var pilot = prompt("Qual o nome do piloto da ".concat(name, "?"));
+    var crewLimit = Number(prompt("Quantos tripulantes a ".concat(name, " suporta?")));
+    var confirmation = confirm("Confirma o registro da nave ".concat(name, "\nPiloto: ").concat(pilot, "\nLimite da tripula\u00E7\u00E3o: ").concat(crewLimit));
+    if (confirmation) {
+        addSpaceship(name, pilot, crewLimit);
+    }
+}
+function secondMenuOption() {
+    var member = prompt('Qual é o nome do tripulante?');
+    var spaceshipName = prompt("Para qual nave ".concat(member, " dever\u00E1 ser designado?"));
+    var spaceship = findSpaceship(spaceshipName);
+    if (spaceship) {
+        var confirmation = confirm("Confirma a inclus\u00E3o de ".concat(member, " na tripula\u00E7\u00E3o da ").concat(spaceship.name, "?"));
+        if (confirmation) {
+            addCrewMember(member, spaceship);
+        }
+    }
+}
+function thirdMenuOption() {
+    var spaceshipName = prompt('Qual é o nome da nave a ser enviada?');
+    var spaceship = findSpaceship(spaceshipName);
+    if (spaceship) {
+        var confirmation = confirm("Confirma o envio da ".concat(spaceship.name, " na miss\u00E3o?"));
+        if (confirmation) {
+            sendInMission(spaceship);
+        }
+    }
+}
+function fourthMenuOption() {
+    var list = 'Naves registradas:\n';
+    spaceships.forEach(function (spaceship) {
+        list += "\n      Nave: ".concat(spaceship.name, "\n      Piloto: ").concat(spaceship.pilot, "\n      Em miss\u00E3o? ").concat(spaceship.inMission ? 'Sim' : 'Não', "\n      Tamanho m\u00E1ximo da tripula\u00E7\u00E3o: ").concat(spaceship.crew.length, "\n    ");
+        spaceship.crew.forEach(function (member) {
+            list += "     - ".concat(member, "\n");
+        });
+    });
+    alert(list);
+}
+var userOption = 0;
+while (userOption !== 5) {
+    var menu = "Painel Principal\n    1 - Registrar uma nova nave\n    2 - Adicionar membro da tripula\u00E7\u00E3o\n    3 - Enviar nave em miss\u00E3o\n    4 - Listar naves registradas\n    5 - Encerrar\n  ";
+    userOption = Number(prompt(menu));
+    switch (userOption) {
+        case 1:
+            firstMenuOption();
+            break;
+        case 2:
+            secondMenuOption();
+            break;
+        case 3:
+            thirdMenuOption();
+            break;
+        case 4:
+            fourthMenuOption();
+            break;
+        case 5:
+            alert('Encerrando o sistema...');
+            break;
+        default:
+            alert('Opção inválida! Retornando ao painel principal...');
+            break;
+    }
+}
